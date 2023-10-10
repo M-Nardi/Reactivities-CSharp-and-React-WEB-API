@@ -1,5 +1,4 @@
 import React, { SyntheticEvent, useState } from "react";
-import { Activity } from "../../../app/models/activity";
 import {
   Button,
   Item,
@@ -8,32 +7,24 @@ import {
   Label,
   Segment,
 } from "semantic-ui-react";
+import { useStore } from "../../../app/stores/store";
+import { observer } from "mobx-react-lite";
 
-interface Props {
-  activities: Activity[];
-  selectActivity: (id: string) => void;
-  deleteActivity: (id: string) => void;
-  submitting: boolean;
-}
 
-export default function ActivityList({
-  activities,
-  selectActivity,
-  deleteActivity,
-  submitting
-}: Props) {
+export default observer (function ActivityList() {
+  const {activityStore} = useStore();
 
   const [target, setTarget] = useState('');
-  
+
   function handleActivityDelete(e: SyntheticEvent<HTMLButtonElement>, id: string){
     setTarget(e.currentTarget.name);
-    deleteActivity(id);
+    activityStore.deleteActivity(id);
   }
 
   return (
     <Segment>
       <Item.Group divided>
-        {activities.map((activity) => (
+        {activityStore.activitiesByDate.map((activity) => (
           <Item key={activity.id}>
             <Item.Content>
               <Item.Header as="a">{activity.title}</Item.Header>
@@ -46,14 +37,14 @@ export default function ActivityList({
               </ItemDescription>
               <ItemExtra>
                 <Button
-                  onClick={() => selectActivity(activity.id)}
+                  onClick={() => activityStore.selectActivity(activity.id)}
                   floated="right"
                   content="View"
                   color="blue"
                 />
                 <Button
                   name = {activity.id}
-                  loading = {submitting && target === activity.id}
+                  loading = {activityStore.loading && target === activity.id}
                   onClick={(e) => handleActivityDelete(e, activity.id)}
                   floated="right"
                   content="Delete"
@@ -67,4 +58,4 @@ export default function ActivityList({
       </Item.Group>
     </Segment>
   );
-}
+})
