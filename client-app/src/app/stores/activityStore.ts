@@ -20,6 +20,19 @@ export default class ActivityStore {
             .sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
     }
 
+    // Obtenção de lista de atividades ordenada por data, reduce do array em objeto, associação de chave aos objetos por data.
+    // Cada data terá um array de atividades que possuem a data correspondente
+    get groupedActivities() {
+        return Object.entries(
+            this.activitiesByDate.reduce((activities, activity) => {
+                const date = activity.date; //key do objeto
+                activities[date] = activities[date] ? [...activities[date], activity] //verificação e adição do elemento  
+                : [activity]; //caso negativo, cria novo array com a atividade
+                return activities;
+            }, {} as {[key: string]: Activity[]})
+        )
+    }
+
    loadActivities = async () => {
         this.setLoadingInitial(true);
         try{
