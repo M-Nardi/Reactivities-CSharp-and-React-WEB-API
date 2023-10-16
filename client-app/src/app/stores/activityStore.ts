@@ -14,6 +14,8 @@ export default class ActivityStore {
         makeAutoObservable(this)
     }
 
+    
+
     //computed property to return ordered data
     get activitiesByDate() {
         return Array.from(this.activityRegistry.values())
