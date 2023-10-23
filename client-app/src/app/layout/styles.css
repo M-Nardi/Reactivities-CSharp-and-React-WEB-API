@@ -30,6 +30,10 @@ body{
   .ui.menu a.ui.inverted.button {
     margin-left: 0.5em;
   }
+
+  .react-datepicker-wrapper{
+    width: 100%;
+  }
   
   .masthead h1.ui.header {
     font-size: 4em;

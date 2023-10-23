@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx"
 import { Activity } from "../models/activity"
 import agent from "../api/agent";
 import {v4 as uuid} from 'uuid';
+import { format } from "date-fns";
 
 export default class ActivityStore {
     activityRegistry = new Map<string, Activity>(); // map list atividades
@@ -19,7 +20,7 @@ export default class ActivityStore {
     //computed property to return ordered data
     get activitiesByDate() {
         return Array.from(this.activityRegistry.values())
-            .sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+            .sort((a, b) => a.date!.getTime() - b.date!.getTime());
     }
 
     // Obtenção de lista de atividades ordenada por data, reduce do array em objeto, associação de chave aos objetos por data.
@@ -27,7 +28,7 @@ export default class ActivityStore {
     get groupedActivities() {
         return Object.entries(
             this.activitiesByDate.reduce((activities, activity) => {
-                const date = activity.date; //key do objeto
+                const date = format(activity.date!, 'dd MMM yyyy'); //key do objeto
                 activities[date] = activities[date] ? [...activities[date], activity] //verificação e adição do elemento  
                 : [activity]; //caso negativo, cria novo array com a atividade
                 return activities;
@@ -72,7 +73,7 @@ export default class ActivityStore {
    }
 
    private setActivity = (activity: Activity) => {
-    activity.date = activity.date.split('T')[0]; //tratamento date
+    activity.date = new Date(activity.date!); //tratamento date
     this.activityRegistry.set(activity.id, activity); //mapeando as atividades
    }
 
