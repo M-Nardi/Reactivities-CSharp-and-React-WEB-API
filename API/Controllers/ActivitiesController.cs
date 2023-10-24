@@ -1,6 +1,7 @@
 using Application.Activities;
 using Domain;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
